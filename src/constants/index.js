@@ -12,3 +12,5 @@ export const GITHUB_FAVICON = 'https://github.githubassets.com/favicons/favicon.
 export const INSTAGRAM_FAVICON = 'https://www.instagram.com/static/images/ico/favicon.ico/36b3ee2d91ed.ico';
 
 export const COUNTRY_CODES = CountryCodes;
+
+export const EMPLOYEE_REGISTER = 'Cadastro de Funcionários';

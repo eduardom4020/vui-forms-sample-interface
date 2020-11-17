@@ -3,12 +3,13 @@ import { Icon, Table, Header, Grid } from 'semantic-ui-react';
 import { GITHUB_FAVICON, INSTAGRAM_FAVICON } from '../constants';
 import { CreateGithubLink, CreateInstagramLink, CreateMailToLink, CreateMapsLink } from '../functions/linkFunctions';
 import { PhoneTextToComponent } from '../functions/phoneFunctions';
+import { TinySubheader } from '../styles/components';
 
 export var EmployeeRow = props => {
     var { 
         age, gender, job, company,
-        taxId, identityNumber, phoneNumber,
-        email, githubUsername, instagramUsername,
+        taxId, identityNumber, phone,
+        email, github, instagram,
         address, number, neighboorhod,
         city, state, complement,
         name, lastName
@@ -20,8 +21,8 @@ export var EmployeeRow = props => {
                 <Header as='h4'>
                     <Header.Content>
                         {name} {lastName}
-                        <Header.Subheader style={{fontSize: '.75rem'}}>{age} Anos | {gender}</Header.Subheader>
-                        <Header.Subheader style={{fontSize: '.9rem'}}>{job} na empresa {company}</Header.Subheader>
+                        <TinySubheader>{age} Anos | {gender}</TinySubheader>
+                        <Header.Subheader>{job} na empresa {company}</Header.Subheader>
                     </Header.Content>
                 </Header>
             </Table.Cell>
@@ -32,7 +33,7 @@ export var EmployeeRow = props => {
                             <Header as='h5'>
                                 <Header.Content>
                                     {taxId}
-                                    <Header.Subheader style={{fontSize: '.75rem'}}>CPF</Header.Subheader>
+                                    <TinySubheader>CPF</TinySubheader>
                                 </Header.Content>
                             </Header>
                         </Grid.Column>
@@ -42,7 +43,7 @@ export var EmployeeRow = props => {
                             <Header as='h5'>
                                 <Header.Content>
                                     {identityNumber}
-                                    <Header.Subheader style={{fontSize: '.75rem'}}>RG</Header.Subheader>
+                                    <TinySubheader>RG</TinySubheader>
                                 </Header.Content>
                             </Header>
                         </Grid.Column>
@@ -50,7 +51,7 @@ export var EmployeeRow = props => {
                 </Grid>
             </Table.Cell>
             <Table.Cell textAlign='center'>
-                {PhoneTextToComponent(phoneNumber)}
+                {PhoneTextToComponent(phone)}
             </Table.Cell>
             <Table.Cell textAlign='center'>
                 <a href={CreateMailToLink(email)}>{email}</a>
@@ -61,7 +62,7 @@ export var EmployeeRow = props => {
                         <Grid.Column>
                             <div style={{display: 'inline-flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <img src={GITHUB_FAVICON} style={{width: 24, margin: 2}}/>
-                                <a href={CreateGithubLink(githubUsername)}>{githubUsername}</a>
+                                <a href={CreateGithubLink(github)}>{github}</a>
                             </div>
                         </Grid.Column>
                     </Grid.Row>
@@ -69,7 +70,7 @@ export var EmployeeRow = props => {
                         <Grid.Column>
                             <div style={{display: 'inline-flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <img src={INSTAGRAM_FAVICON} style={{width: 24, margin: 2}}/>
-                                <a href={CreateInstagramLink(instagramUsername)}>{instagramUsername}</a>
+                                <a href={CreateInstagramLink(instagram)}>{instagram}</a>
                             </div>
                         </Grid.Column>
                     </Grid.Row>
@@ -80,7 +81,7 @@ export var EmployeeRow = props => {
                     <Header.Content>
                         {address} {number}
                         <Header.Subheader>{neighboorhod} | {city} - {state}</Header.Subheader>
-                        <Header.Subheader style={{fontSize: '.75rem'}}>{complement}</Header.Subheader>
+                        <TinySubheader>{complement}</TinySubheader>
                     </Header.Content>
                     <a 
                         href={CreateMapsLink(address, number, neighboorhod, city, state)} 
@@ -88,7 +89,7 @@ export var EmployeeRow = props => {
                     >
                         <Icon 
                             name='external alternate' 
-                            style={{position: 'absolute', right: 0, bottom: '.2rem', fontSize: '1rem'}}
+                            style={{position: 'absolute', right: '-1rem', bottom: '.2rem', fontSize: '1rem'}}
                         />
                     </a>
                 </Header>
