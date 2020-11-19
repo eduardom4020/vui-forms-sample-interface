@@ -14,3 +14,6 @@ export const INSTAGRAM_FAVICON = 'https://www.instagram.com/static/images/ico/fa
 export const COUNTRY_CODES = CountryCodes;
 
 export const EMPLOYEE_REGISTER = 'Cadastro de Funcionários';
+
+export const DADOS_NAO_ENCONTRADOS = 'Dados Não Encontrados';
+export const CRIACAO_NAO_REALIZADA = 'Criação Não Realizada';

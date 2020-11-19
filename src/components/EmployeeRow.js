@@ -6,23 +6,16 @@ import { PhoneTextToComponent } from '../functions/phoneFunctions';
 import { TinySubheader } from '../styles/components';
 
 export var EmployeeRow = props => {
-    var { 
-        age, gender, job, company,
-        taxId, identityNumber, phone,
-        email, github, instagram,
-        address, number, neighboorhod,
-        city, state, complement,
-        name, lastName
-    } = props; 
+    var { largeForm } = props; 
 
     return (
         <Table.Row>
             <Table.Cell>
                 <Header as='h4'>
                     <Header.Content>
-                        {name} {lastName}
-                        <TinySubheader>{age} Anos | {gender}</TinySubheader>
-                        <Header.Subheader>{job} na empresa {company}</Header.Subheader>
+                        {largeForm.name} {largeForm.lastName}
+                        <TinySubheader>{largeForm.age} Anos | {largeForm.gender}</TinySubheader>
+                        <Header.Subheader>{largeForm.job} na empresa {largeForm.company}</Header.Subheader>
                     </Header.Content>
                 </Header>
             </Table.Cell>
@@ -32,7 +25,7 @@ export var EmployeeRow = props => {
                         <Grid.Column>
                             <Header as='h5'>
                                 <Header.Content>
-                                    {taxId}
+                                    {largeForm.taxId}
                                     <TinySubheader>CPF</TinySubheader>
                                 </Header.Content>
                             </Header>
@@ -42,7 +35,7 @@ export var EmployeeRow = props => {
                         <Grid.Column>
                             <Header as='h5'>
                                 <Header.Content>
-                                    {identityNumber}
+                                    {largeForm.identityNumber}
                                     <TinySubheader>RG</TinySubheader>
                                 </Header.Content>
                             </Header>
@@ -51,10 +44,10 @@ export var EmployeeRow = props => {
                 </Grid>
             </Table.Cell>
             <Table.Cell textAlign='center'>
-                {PhoneTextToComponent(phone)}
+                {PhoneTextToComponent(largeForm.phone)}
             </Table.Cell>
             <Table.Cell textAlign='center'>
-                <a href={CreateMailToLink(email)}>{email}</a>
+                <a href={CreateMailToLink(largeForm.email)}>{largeForm.email}</a>
             </Table.Cell>
             <Table.Cell>
                 <Grid columns={1} verticalAlign='middle' centered>
@@ -62,7 +55,7 @@ export var EmployeeRow = props => {
                         <Grid.Column>
                             <div style={{display: 'inline-flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <img src={GITHUB_FAVICON} style={{width: 24, margin: 2}}/>
-                                <a href={CreateGithubLink(github)}>{github}</a>
+                                <a href={CreateGithubLink(largeForm.github)}>{largeForm.github}</a>
                             </div>
                         </Grid.Column>
                     </Grid.Row>
@@ -70,7 +63,7 @@ export var EmployeeRow = props => {
                         <Grid.Column>
                             <div style={{display: 'inline-flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <img src={INSTAGRAM_FAVICON} style={{width: 24, margin: 2}}/>
-                                <a href={CreateInstagramLink(instagram)}>{instagram}</a>
+                                <a href={CreateInstagramLink(largeForm.instagram)}>{largeForm.instagram}</a>
                             </div>
                         </Grid.Column>
                     </Grid.Row>
@@ -79,12 +72,12 @@ export var EmployeeRow = props => {
             <Table.Cell>
                 <Header as='h5' style={{position: 'relative'}}>
                     <Header.Content>
-                        {address} {number}
-                        <Header.Subheader>{neighboorhod} | {city} - {state}</Header.Subheader>
-                        <TinySubheader>{complement}</TinySubheader>
+                        {largeForm.address} {largeForm.number}
+                        <Header.Subheader>{largeForm.neighborhood} | {largeForm.city} - {largeForm.state}</Header.Subheader>
+                        <TinySubheader>{largeForm.complement}</TinySubheader>
                     </Header.Content>
                     <a 
-                        href={CreateMapsLink(address, number, neighboorhod, city, state)} 
+                        href={CreateMapsLink(largeForm.address, largeForm.number, largeForm.neighborhood, largeForm.city, largeForm.state)} 
                         target='_blank' style={{color: '#0f0f0f'}}
                     >
                         <Icon 

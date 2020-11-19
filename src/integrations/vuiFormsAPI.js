@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { LargeForm } from '../entities/largeForm';
+import { DADOS_NAO_ENCONTRADOS, CRIACAO_NAO_REALIZADA } from '../constants';
 
 export class VUIFormsAPI {
     constructor() {
@@ -9,9 +11,17 @@ export class VUIFormsAPI {
         });
     }
 
-    async list() {
-        return await this.connection.get('/large-form')
-            .then(({data, status}) => status === 200 ? data : {error: `Returned status code ${status}`, message: 'Dados Não Encontrados'})
+    _treatReturn(promise, onErrorMessage) {
+        return promise
+            .then(({data, status}) => status === 200 ? new LargeForm(data) : {error: `Returned status code ${status}`, message: onErrorMessage})
             .catch(error => ({error, message: 'Not Treated Error'}));
+    }
+
+    async list() {
+        return await this._treatReturn(this.connection.get('/large-form'), DADOS_NAO_ENCONTRADOS);
+    }
+
+    async create(largeForm) {
+        return await this._treatReturn(this.connection.post('/large-form', largeForm), CRIACAO_NAO_REALIZADA);
     }
 }
