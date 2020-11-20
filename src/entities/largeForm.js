@@ -40,4 +40,28 @@ export class LargeForm {
         this.neighborhood = neighborhood;
         this.complement = complement;
     }
+
+    json() {
+        return {
+            name: this.name,
+            phone: this.phone,
+            lastName: this.lastName,
+            email: this.email,
+            zipCode: this.zipCode,
+            instagram: this.instagram,
+            github: this.github,
+            identityNumber: this.identityNumber,
+            taxId: this.taxId,
+            gender: this.gender,
+            age: this.age,
+            job: this.job,
+            company: this.company,
+            state: this.state,
+            city: this.city,
+            address: this.address,
+            number: this.number,
+            neighborhood: this.neighborhood,
+            complement: this.complement
+        };
+    }
 }

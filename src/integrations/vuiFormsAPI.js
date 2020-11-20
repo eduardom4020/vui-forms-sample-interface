@@ -13,7 +13,13 @@ export class VUIFormsAPI {
 
     _treatReturn(promise, onErrorMessage) {
         return promise
-            .then(({data, status}) => status === 200 ? new LargeForm(data) : {error: `Returned status code ${status}`, message: onErrorMessage})
+            .then(({data, status}) => {
+                if(status === 200) {
+                    return data.constructor === Array ? data.map(row => new LargeForm(row)) : new LargeForm(data);
+                } else {
+                    return {error: `Returned status code ${status}`, message: onErrorMessage};
+                }
+            })
             .catch(error => ({error, message: 'Not Treated Error'}));
     }
 
@@ -22,6 +28,6 @@ export class VUIFormsAPI {
     }
 
     async create(largeForm) {
-        return await this._treatReturn(this.connection.post('/large-form', largeForm), CRIACAO_NAO_REALIZADA);
+        return await this._treatReturn(this.connection.post('/large-form', largeForm.json()), CRIACAO_NAO_REALIZADA);
     }
 }

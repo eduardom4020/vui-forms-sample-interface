@@ -34,7 +34,10 @@ var App = () => {
       />
       {
         creationDialogOpened &&
-          <EmployeeFormDialog/>
+          <EmployeeFormDialog
+            handleClose={() => openCreationDialog(false)}
+            // handleSubmit={formData => vuiForms.create(formData)}
+          />
       }
     </MainContainer>
   );

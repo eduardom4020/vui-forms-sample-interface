@@ -18,7 +18,7 @@ var EmployeeTable = ({rows=[]}) => (
                 <SmallHeaderCell width='one'>Outros</SmallHeaderCell>
             </Table.Row>
         </Table.Header>
-            {rows.map(EmployeeRow)}
+            {rows.map(largeForm => <EmployeeRow largeForm={largeForm}/>)}
         <Table.Body>
         </Table.Body>
     </Table>

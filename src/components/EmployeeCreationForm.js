@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LargeForm } from '../entities/largeForm';
 import { Form, Input, Select } from 'semantic-ui-react';
 
@@ -8,23 +8,33 @@ const GENEROS = [
     { key: 'o', text: 'Outro', value: 'Outro' },
 ];
 
-var EmployeeCreationForm = () => {
+var EmployeeCreationForm = ({handleSubmit, afterSubmit}) => {
     var [ genderOther, setGenderOther ] = useState(null);
+    var [ submited, setSubmit ] = useState(false);
+
+    useEffect(() => {
+        if(submited) afterSubmit();
+    }, [afterSubmit, submited]);
 
     return (
-        <Form onSubmit={(event) => {
-            var formValues = [...event.target.elements].filter(el => el.localName === 'input')
-                .map(el => ({[el.id]: el.value}))
-                .reduce((a, b) => ({...a, ...b}), {});
+        <Form 
+            style={{overflow: 'hidden', height: '100%'}}
+            
+            onSubmit={(event) => {
+                var formValues = [...event.target.elements].filter(el => el.localName === 'input')
+                    .map(el => ({[el.id]: el.value}))
+                    .reduce((a, b) => ({...a, ...b}), {});
 
-            var genderSelected = event.target.firstElementChild.querySelector('#genderSelection .selected > span').innerHTML;
+                var genderSelected = event.target.firstElementChild.querySelector('#genderSelection .selected > span').innerHTML;
 
-            var gender = genderSelected === 'Outro' ? formValues.customGender : genderSelected;
-                
-            var formSubmit = new LargeForm({...formValues, gender});
+                var gender = genderSelected === 'Outro' ? formValues.customGender : genderSelected;
+                    
+                var formSubmit = new LargeForm({...formValues, gender});
 
-            console.log(formSubmit);
-        }}>
+                if(handleSubmit) handleSubmit(formSubmit);
+                setSubmit(true);
+            }}
+        >
             <Form.Group>
                 <Form.Field
                     id='name'
@@ -161,7 +171,7 @@ var EmployeeCreationForm = () => {
                     placeholder='Sigla do Estado'
                 />
             </Form.Group>
-            <Form.Button content='Submit'>Salvar</Form.Button>      
+            <Form.Button content='Submit' disabled={submited}>Salvar</Form.Button>      
         </Form>
     );
 }
