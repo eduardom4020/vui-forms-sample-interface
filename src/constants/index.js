@@ -1,5 +1,7 @@
 import CountryCodes from './country-codes.json';
 
+export const API_TIMEOUT = 2000;
+
 export const STRING_EMPTY = '';
 export const MAIL_TO = 'mailto:';
 export const GITHUB_HOST = 'https://github.com/';

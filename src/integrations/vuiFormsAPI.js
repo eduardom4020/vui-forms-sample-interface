@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { LargeForm } from '../entities/largeForm';
-import { DADOS_NAO_ENCONTRADOS, CRIACAO_NAO_REALIZADA } from '../constants';
+import { DADOS_NAO_ENCONTRADOS, CRIACAO_NAO_REALIZADA, API_TIMEOUT } from '../constants';
 
 export class VUIFormsAPI {
     constructor() {
         this.connection = axios.create({
             baseURL: 'http://ec2-18-231-159-247.sa-east-1.compute.amazonaws.com:3000/',
-            timeout: 1000,
+            timeout: API_TIMEOUT,
             headers: {'Access-Control-Allow-Origin': '*'}
         });
     }

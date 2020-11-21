@@ -8,170 +8,196 @@ const GENEROS = [
     { key: 'o', text: 'Outro', value: 'Outro' },
 ];
 
-var EmployeeCreationForm = ({handleSubmit, afterSubmit}) => {
-    var [ genderOther, setGenderOther ] = useState(null);
-    var [ submited, setSubmit ] = useState(false);
+var GenerateInputProps = (id, form, setForm) => ({
+    id,
+    value: form && form[id],
+    onClick: () => {
+        if(form) {
+            form[id] = null;
+            setForm(form);
+        }
+    },
+    control: Input
+});
+
+var EmployeeCreationForm = ({handleSubmit, onSend, onFailure, hide}) => {
+    var [ genderOption, setGenderOption ] = useState(null);
+    var [ sent, send ] = useState(false);
+    var [ failureMessage, setFailureMessage ] = useState(null);
+    var [ form, setForm ] = useState(null);
 
     useEffect(() => {
-        if(submited) afterSubmit();
-    }, [afterSubmit, submited]);
+        if(sent && onSend) onSend();
+    }, [onSend, sent]);
 
+    useEffect(() => {
+        if(failureMessage && onFailure) {
+            send(false);
+            onFailure(failureMessage);
+            setFailureMessage(null);
+        }
+    }, [onFailure, failureMessage]);
+
+    useEffect(() => {
+        if(handleSubmit && form && sent) handleSubmit(form).catch(setFailureMessage);
+    }, [form, sent, handleSubmit]);
+    
     return (
         <Form 
-            style={{overflow: 'hidden', height: '100%'}}
+            key={`form-${hide ? 'hidden' : 'visible'}`}
+            style={{overflow: 'hidden', height: '100%', display: hide ? 'none' : 'visible'}}
             
             onSubmit={(event) => {
+                console.log('On submit')
                 var formValues = [...event.target.elements].filter(el => el.localName === 'input')
                     .map(el => ({[el.id]: el.value}))
                     .reduce((a, b) => ({...a, ...b}), {});
+                console.log(formValues);
 
                 var genderSelected = event.target.firstElementChild.querySelector('#genderSelection .selected > span').innerHTML;
 
                 var gender = genderSelected === 'Outro' ? formValues.customGender : genderSelected;
                     
                 var formSubmit = new LargeForm({...formValues, gender});
-
-                if(handleSubmit) handleSubmit(formSubmit);
-                setSubmit(true);
+                console.log(formSubmit);
+                setForm(formSubmit);
+                send(true);
             }}
         >
             <Form.Group>
                 <Form.Field
-                    id='name'
                     required
                     width={3}
-                    control={Input}
                     label='Nome'
                     placeholder='Nome'
-                />
-                <Form.Field 
-                    id='lastName'
-                    required
-                    width={3}
-                    control={Input}
-                    label='Sobrenome'
-                    placeholder='Sobrenome'
+                    {...GenerateInputProps('name', form, setForm)}
                 />
                 <Form.Field
-                    id='age' 
+                    required
+                    width={3}
+                    label='Sobrenome'
+                    placeholder='Sobrenome'
+                    {...GenerateInputProps('lastName', form, setForm)}
+                />
+                <Form.Field
                     required
                     width={2}
-                    control={Input}
                     label='Idade'
                     placeholder='Idade'
+                    {...GenerateInputProps('age', form, setForm)}
                 />
                 <Form.Field
                     id='genderSelection'
                     control={Select}
                     label='Gênero'
                     options={GENEROS}
-                    onChange={(_, data) => data.value === 'Outro' ? setGenderOther('') : setGenderOther(null)}
+                    onChange={(_, data) => setGenderOption(data.value)}
+                    value={genderOption}
+                    onClick={() => {
+                        setGenderOption(null);
+                    }}
                 />
-                <Form.Field
-                    id='customGender'
-                    width={4}
-                    control={Input}
-                    label={genderOther != null ? 'Outro' : null}
-                    placeholder='Indique o Gênero'
-                    style={{display: genderOther != null ? '' : 'none'}}
-                    required={genderOther != null}
-                />
+                {
+                    genderOption === 'Outro' &&
+                        <Form.Field
+                            id='customGender'
+                            control={Input}
+                            width={4}
+                            label='Outro'
+                            placeholder='Indique o Gênero'
+                            required
+                            value={form && form.gender}
+                            onClick={() => {
+                                if(form) {
+                                    form.gender = null;
+                                    setForm(form);
+                                }
+                            }}
+                        />
+                }
             </Form.Group>
             <Form.Group widths='equal'>
                 <Form.Field
-                    id='phone'
-                    control={Input}
                     label='Telefone'
                     placeholder='+55 12 ...'
+                    {...GenerateInputProps('phone', form, setForm)}
                 />
-                <Form.Field required
-                    id='email'
-                    control={Input}
+                <Form.Field 
+                    required
                     label='E-Mail'
                     placeholder='...@email.com'
+                    {...GenerateInputProps('email', form, setForm)}
                 />
                 <Form.Field
-                    id='instagram'
-                    control={Input}
                     label='Usuário do Instagram'
                     placeholder='Usuário do Instagram'
+                    {...GenerateInputProps('instagram', form, setForm)}
                 />
                 <Form.Field
-                    id='github'
-                    control={Input}
                     label='Usuário do Github'
                     placeholder='Usuário do Github'
+                    {...GenerateInputProps('github', form, setForm)}
                 />
             </Form.Group>
             <Form.Group widths='equal'>
                 <Form.Field
-                    id='taxId'
-                    control={Input}
                     label='CPF'
                     placeholder='CPF Sem Pontos e Traços'
+                    {...GenerateInputProps('taxId', form, setForm)}
                 />
                 <Form.Field
-                    id='identityNumber'
-                    control={Input}
                     label='Número de Indentidade'
                     placeholder='Identidade Sem Pontos e Traços'
+                    {...GenerateInputProps('identityNumber', form, setForm)}
                 />
             </Form.Group>
             <Form.Group widths='equal'>
                 <Form.Field
-                    id='job'
-                    control={Input}
                     label='Profissão'
                     placeholder='Profissão'
+                    {...GenerateInputProps('job', form, setForm)}
                 />
                 <Form.Field
-                    id='company'
-                    control={Input}
                     label='Trabalha na Empresa'
                     placeholder='Nome da Empresa'
+                    {...GenerateInputProps('company', form, setForm)}
                 />
             </Form.Group>
             <Form.Group widths='equal'>
                 <Form.Field
-                    id='address'
-                    control={Input}
                     label='Logradouro'
                     placeholder='Logradouro'
+                    {...GenerateInputProps('address', form, setForm)}
                 />
                 <Form.Field
-                    id='number'
-                    control={Input}
                     label='Número'
                     placeholder='Número'
+                    {...GenerateInputProps('number', form, setForm)}
                 />
                 <Form.Field
-                    id='complement'
-                    control={Input}
                     label='Complemento'
                     placeholder='Complemento'
+                    {...GenerateInputProps('complement', form, setForm)}
                 />
             </Form.Group>
             <Form.Group widths='equal'>
                 <Form.Field
-                    id='neighborhood'
-                    control={Input}
                     label='Bairro'
                     placeholder='Bairro'
+                    {...GenerateInputProps('neighborhood', form, setForm)}
                 />
                 <Form.Field
-                    id='city'
-                    control={Input}
                     label='Cidade'
                     placeholder='Cidade'
+                    {...GenerateInputProps('city', form, setForm)}
                 />
                 <Form.Field
-                    id='state'
-                    control={Input}
                     label='Estado'
                     placeholder='Sigla do Estado'
+                    {...GenerateInputProps('state', form, setForm)}
                 />
             </Form.Group>
-            <Form.Button content='Submit' disabled={submited}>Salvar</Form.Button>      
+            <Form.Button content='Submit' disabled={sent}>Salvar</Form.Button>      
         </Form>
     );
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { EmployeeTable, EmployeeListPageTitle, FAB, EmployeeFormDialog } from './components';
 import { MainContainer, TableShadowedContainer } from './styles/components';
 import { VUIFormsAPI } from './integrations/vuiFormsAPI';
+import { API_TIMEOUT } from './constants'; 
 
 var vuiForms = new VUIFormsAPI();
 
@@ -36,7 +37,9 @@ var App = () => {
         creationDialogOpened &&
           <EmployeeFormDialog
             handleClose={() => openCreationDialog(false)}
+            submitTotalTime={API_TIMEOUT}
             // handleSubmit={formData => vuiForms.create(formData)}
+            handleSubmit={formData => new Promise((_, rej) => setTimeout(() => rej('Tempo esgotado'), 1000))}
           />
       }
     </MainContainer>

@@ -1,11 +1,14 @@
-import { Container, Header, Table } from 'semantic-ui-react';
-import styled from 'styled-components';
+import { Container, Header, Table, Segment } from 'semantic-ui-react';
+import styled, {css} from 'styled-components';
 
-export var CenteredFlexDiv = styled.div`
+var CenteredFlexStyle = css`
     display: flex;
     justify-content: center;
     align-items: center;
 `;
+
+export var CenteredFlexDiv = styled.div`${CenteredFlexStyle}`;
+export var CenteredFlexSegment = styled(Segment)`${CenteredFlexStyle}`;
 
 export var MainContainer = styled(Container)`
     width: 80%;
