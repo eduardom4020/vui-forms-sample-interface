@@ -19,27 +19,28 @@ var EmployeeFormDialog = ({handleClose, handleSubmit, submitTotalTime}) => {
     var [animation, setAnimation] = useState(0);
     var [timeoutId, setTimeoutId] = useState(null);
     var [errorMessage, setErrorMessage] = useState(null);
+    var [operationSuccess, setOperationSuccess] = useState(false);
 
     useEffect(() => {
         var id = null;
         switch(animation) {
             case 1:
-                id = setTimeout(() => setAnimation(2), submitTotalTime * .2);
+                id = setTimeout(() => setAnimation(2), operationSuccess ? 300 : submitTotalTime * .2);
                 break;
             case 2:
-                id = setTimeout(() => setAnimation(3), submitTotalTime * .2);
+                id = setTimeout(() => setAnimation(3), operationSuccess ? 300 : submitTotalTime * .2);
                 break;
             case 3:
-                id = setTimeout(() => setAnimation(4), submitTotalTime * .1);
+                id = setTimeout(() => setAnimation(4), operationSuccess ? 100 : submitTotalTime * .1);
                 break;
             case 4:
-                id = setTimeout(() => setAnimation(5), submitTotalTime * .3);
+                id = setTimeout(() => setAnimation(5), operationSuccess ? 400 : submitTotalTime * .3);
                 break;
             case 5:
                 id = setTimeout(() => {
                     setAnimation(0);
                     handleClose();
-                }, submitTotalTime * .2);
+                }, operationSuccess ? 300 : submitTotalTime * .2);
                 break;
             default:
                 break;
@@ -77,9 +78,14 @@ var EmployeeFormDialog = ({handleClose, handleSubmit, submitTotalTime}) => {
                         if(animation === 0) setAnimation(1);
                     }}
                     onFailure={(message) => {
+                        console.log('Failure');
                         setErrorMessage(message);
                         if(timeoutId != null) clearTimeout(timeoutId);
                         if(animation > 0) setAnimation(0);
+                    }}
+                    onSuccess={() => {
+                        console.log('Success')
+                        setOperationSuccess(true);
                     }}
                     hide={animation >= 2}
                 />

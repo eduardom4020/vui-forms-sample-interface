@@ -15,12 +15,14 @@ export class VUIFormsAPI {
         return promise
             .then(({data, status}) => {
                 if(status === 200) {
-                    return data.constructor === Array ? data.map(row => new LargeForm(row)) : new LargeForm(data);
+                    var result = data.constructor === Array ? data.map(row => new LargeForm(row)) : new LargeForm(data);
+                    return Promise.resolve(result);
                 } else {
-                    return {error: `Returned status code ${status}`, message: onErrorMessage};
+                    var result = {error: `Returned status code ${status}`, message: onErrorMessage};
+                    return Promise.reject(result);
                 }
             })
-            .catch(error => ({error, message: 'Not Treated Error'}));
+            .catch(errorMessage => Promise.reject({error: 'Not Treated Error', message: errorMessage.toString()}));
     }
 
     async list() {

@@ -20,7 +20,7 @@ var GenerateInputProps = (id, form, setForm) => ({
     control: Input
 });
 
-var EmployeeCreationForm = ({handleSubmit, onSend, onFailure, hide}) => {
+var EmployeeCreationForm = ({handleSubmit, onSend, onFailure, onSuccess, hide}) => {
     var [ genderOption, setGenderOption ] = useState(null);
     var [ sent, send ] = useState(false);
     var [ failureMessage, setFailureMessage ] = useState(null);
@@ -39,8 +39,11 @@ var EmployeeCreationForm = ({handleSubmit, onSend, onFailure, hide}) => {
     }, [onFailure, failureMessage]);
 
     useEffect(() => {
-        if(handleSubmit && form && sent) handleSubmit(form).catch(setFailureMessage);
-    }, [form, sent, handleSubmit]);
+        if(handleSubmit && form && sent && onSuccess) {
+            send(false);
+            handleSubmit(form).then(onSuccess).catch(({message}) => setFailureMessage(message));
+        }
+    }, [form, sent, handleSubmit, onSuccess]);
     
     return (
         <Form 
@@ -48,18 +51,16 @@ var EmployeeCreationForm = ({handleSubmit, onSend, onFailure, hide}) => {
             style={{overflow: 'hidden', height: '100%', display: hide ? 'none' : 'visible'}}
             
             onSubmit={(event) => {
-                console.log('On submit')
                 var formValues = [...event.target.elements].filter(el => el.localName === 'input')
                     .map(el => ({[el.id]: el.value}))
                     .reduce((a, b) => ({...a, ...b}), {});
-                console.log(formValues);
 
                 var genderSelected = event.target.firstElementChild.querySelector('#genderSelection .selected > span').innerHTML;
 
                 var gender = genderSelected === 'Outro' ? formValues.customGender : genderSelected;
                     
                 var formSubmit = new LargeForm({...formValues, gender});
-                console.log(formSubmit);
+
                 setForm(formSubmit);
                 send(true);
             }}

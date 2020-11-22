@@ -38,8 +38,7 @@ var App = () => {
           <EmployeeFormDialog
             handleClose={() => openCreationDialog(false)}
             submitTotalTime={API_TIMEOUT}
-            // handleSubmit={formData => vuiForms.create(formData)}
-            handleSubmit={formData => new Promise((_, rej) => setTimeout(() => rej('Tempo esgotado'), 1000))}
+            handleSubmit={formData => vuiForms.create(formData)}
           />
       }
     </MainContainer>
