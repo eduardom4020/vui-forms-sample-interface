@@ -1,5 +1,8 @@
 import CountryCodes from './country-codes.json';
 
+// export const VUI_API_HOST = 'http://ec2-18-231-159-247.sa-east-1.compute.amazonaws.com:3000/';
+export const VUI_API_HOST = 'http://localhost:5000/';
+
 export const API_TIMEOUT = 2000;
 
 export const STRING_EMPTY = '';
@@ -19,3 +22,4 @@ export const EMPLOYEE_REGISTER = 'Cadastro de Funcionários';
 
 export const DADOS_NAO_ENCONTRADOS = 'Dados Não Encontrados';
 export const CRIACAO_NAO_REALIZADA = 'Criação Não Realizada';
+export const NAO_POSSIVEL_DELETAR = 'Não Foi Possivel Deletar';

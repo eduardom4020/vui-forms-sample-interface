@@ -78,13 +78,11 @@ var EmployeeFormDialog = ({handleClose, handleSubmit, submitTotalTime}) => {
                         if(animation === 0) setAnimation(1);
                     }}
                     onFailure={(message) => {
-                        console.log('Failure');
                         setErrorMessage(message);
                         if(timeoutId != null) clearTimeout(timeoutId);
                         if(animation > 0) setAnimation(0);
                     }}
                     onSuccess={() => {
-                        console.log('Success')
                         setOperationSuccess(true);
                     }}
                     hide={animation >= 2}

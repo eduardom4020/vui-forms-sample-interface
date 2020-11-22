@@ -1,17 +1,28 @@
-import React from 'react';
-import { Icon, Table, Header, Grid } from 'semantic-ui-react';
+import React, { useState } from 'react';
+import { Icon, Table, Header, Grid, Transition } from 'semantic-ui-react';
 import { GITHUB_FAVICON, INSTAGRAM_FAVICON } from '../constants';
 import { CreateGithubLink, CreateInstagramLink, CreateMailToLink, CreateMapsLink } from '../functions/linkFunctions';
 import { PhoneTextToComponent } from '../functions/phoneFunctions';
-import { TinySubheader } from '../styles/components';
+import { TinySubheader, ActionButton, ActionButtonGroup } from '../styles/components';
 
 export var EmployeeRow = props => {
-    var { largeForm } = props; 
+    var [ hovered, hovering ] = useState(false);
+
+    var { largeForm } = props;
 
     return (
-        <Table.Row>
-            <Table.Cell>
-                <Header as='h4'>
+        <Table.Row onMouseEnter={() => hovering(true)} onMouseLeave={() => hovering(false)}>
+            <Table.Cell style={{position: 'relative'}}>
+                <Transition.Group animation='slide left' duration={250}>
+                    {
+                        hovered &&
+                            <ActionButtonGroup vertical icon size='mini'>
+                                <ActionButton icon='edit' textColor='#1f88be'/>
+                                <ActionButton icon='trash alternate' textColor='#dd4b39'/>
+                            </ActionButtonGroup>
+                    }
+                </Transition.Group>
+                <Header as='h4' style={{margin: 0}}>
                     <Header.Content>
                         {largeForm.name} {largeForm.lastName}
                         <TinySubheader>{largeForm.age} Anos | {largeForm.gender}</TinySubheader>

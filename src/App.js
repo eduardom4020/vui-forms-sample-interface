@@ -8,17 +8,28 @@ import { API_TIMEOUT } from './constants';
 
 var vuiForms = new VUIFormsAPI();
 
-var App = () => {  
+var App = () => {
   var [ rows, setRows ] = useState([]);
+  var [ visibleRows, setVisibleRows ] = useState(rows);
+  var [ creationDialogOpened, openCreationDialog ] = useState(false);
 
   useEffect(() => {
     vuiForms.list()
-      .then(result => {
-        if(!result.error) setRows(result);
-      });
+      .then(setVisibleRows);
   }, []);
 
-  var [ creationDialogOpened, openCreationDialog ] = useState(false);
+  useEffect(() => {
+    vuiForms.startRealTimeMode()
+      .useRealTimeList(setRows);
+
+    return () => vuiForms.cancelRealTimeMode();
+  }, []);
+
+  useEffect(() => {
+    if(!creationDialogOpened) {
+      setVisibleRows(rows);
+    }
+  }, [rows, creationDialogOpened]);
   
   return (
     <MainContainer textAlign='center'>
@@ -26,10 +37,13 @@ var App = () => {
       <EmployeeListPageTitle />
       <br/>
       <TableShadowedContainer>
-        <EmployeeTable rows={rows} />
+        <EmployeeTable 
+          rows={visibleRows} 
+          handleDelete={formData => vuiForms.delete(formData)}
+        />
       </TableShadowedContainer>
       <FAB
-        color='google plus'
+        color='green'
         icon='plus'
         onClick={() => openCreationDialog(true)}
       />
