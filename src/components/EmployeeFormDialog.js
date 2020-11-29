@@ -3,6 +3,7 @@ import { Transition, Icon, Message } from 'semantic-ui-react';
 import EmployeeCreationForm from './EmployeeCreationForm';
 import { CenteredFlexDiv, CenteredFlexSegment } from '../styles/components';
 import { MousePosition } from '../enums/mousePositionEnum'; 
+import { Action } from '../enums/actionEnum';
 
 const BACKGROUND_STYLE = {
     position: 'fixed', 
@@ -14,7 +15,7 @@ const BACKGROUND_STYLE = {
     backgroundColor: '#00000070'
 };
 
-var EmployeeFormDialog = ({handleClose, handleSubmit, submitTotalTime}) => {
+var EmployeeFormDialog = ({handleClose, handleSubmit, submitTotalTime, action}) => {
     var [mousePosition, setMousePosition] = useState(MousePosition.Outside);
     var [animation, setAnimation] = useState(0);
     var [timeoutId, setTimeoutId] = useState(null);
@@ -94,8 +95,15 @@ var EmployeeFormDialog = ({handleClose, handleSubmit, submitTotalTime}) => {
                     transitionOnMount
                 >
                     {
-                        animation >= 3 && animation <= 5 &&
-                            <Icon name={`envelope${animation === 3 ? ' open' : ''}`} size='huge'/>
+                        animation >= 3 && animation <= 5 && (
+                            <Icon.Group size='huge'>
+                                <Icon name={`envelope${animation === 3 ? ' open' : ''}`}/>
+                                <Icon 
+                                    corner='bottom right'
+                                    name={`${action === Action.Edit ? 'edit' : 'add'}`}
+                                />
+                            </Icon.Group>
+                        )
                     }
                 </Transition.Group>
             </CenteredFlexSegment>

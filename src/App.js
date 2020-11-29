@@ -6,13 +6,14 @@ import { MainContainer, TableShadowedContainer } from './styles/components';
 import { VUIFormsAPI } from './integrations/vuiFormsAPI';
 import { API_TIMEOUT } from './constants';
 import { getMessagesFactory } from './functions/messagingFunctions';
+import { Action } from './enums/actionEnum';
 
 var vuiForms = new VUIFormsAPI();
 
 var App = () => {
   var [ rows, setRows ] = useState([]);
   var [ visibleRows, setVisibleRows ] = useState(rows);
-  var [ creationDialogOpened, openCreationDialog ] = useState(false);
+  var [ dialogType, openDialogFor ] = useState(null);
 
   useEffect(() => {
     var messagesOverlayDOM = document.getElementById('messages-overlay');
@@ -30,10 +31,10 @@ var App = () => {
   }, []);
 
   useEffect(() => {
-    if(!creationDialogOpened) {
+    if(!dialogType) {
       setVisibleRows(rows);
     }
-  }, [rows, creationDialogOpened]);
+  }, [rows, dialogType]);
   
   return (
     <MainContainer textAlign='center'>
@@ -43,22 +44,28 @@ var App = () => {
       <TableShadowedContainer>
         <EmployeeTable 
           rows={visibleRows} 
-          // handleDelete={formData => vuiForms.delete(formData)}
-          handleDelete={formData => new Promise((res, rej) => setTimeout(() => rej('Errror'), 1000))}
+          handleDelete={formData => vuiForms.delete(formData)}
+          handleEdit={() => openDialogFor(Action.Edit)}
+          // handleDelete={formData => new Promise((res, rej) => setTimeout(() => rej({message: 'Unable to delete due simulated error.'}), 1000))}
           deleteTotalTime={API_TIMEOUT}
         />
       </TableShadowedContainer>
       <FAB
         color='green'
         icon='plus'
-        onClick={() => openCreationDialog(true)}
+        onClick={() => openDialogFor(Action.Create)}
       />
       {
-        creationDialogOpened &&
+        dialogType &&
           <EmployeeFormDialog
-            handleClose={() => openCreationDialog(false)}
+            handleClose={() => openDialogFor(null)}
             submitTotalTime={API_TIMEOUT}
-            handleSubmit={formData => vuiForms.create(formData)}
+            handleSubmit={formData => dialogType === Action.Create ? 
+                vuiForms.create(formData) 
+              :
+                vuiForms.edit(formData)
+            }
+            action={dialogType}
           />
       }
     </MainContainer>

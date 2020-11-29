@@ -22,4 +22,5 @@ export const EMPLOYEE_REGISTER = 'Cadastro de Funcionários';
 
 export const DADOS_NAO_ENCONTRADOS = 'Dados Não Encontrados';
 export const CRIACAO_NAO_REALIZADA = 'Criação Não Realizada';
+export const EDICAO_NAO_REALIZADA = 'Atualização Não Realizada';
 export const NAO_POSSIVEL_DELETAR = 'Não Foi Possivel Deletar';

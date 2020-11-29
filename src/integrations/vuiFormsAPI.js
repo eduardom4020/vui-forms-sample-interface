@@ -3,6 +3,7 @@ import { LargeForm } from '../entities/largeForm';
 import { 
     DADOS_NAO_ENCONTRADOS, 
     CRIACAO_NAO_REALIZADA,
+    EDICAO_NAO_REALIZADA,
     NAO_POSSIVEL_DELETAR,
     API_TIMEOUT, 
     VUI_API_HOST 
@@ -56,6 +57,14 @@ export class VUIFormsAPI {
         );
     }
 
+    async edit(largeForm) {
+        return await this._treatReturn(
+            this.connection.put('/large-form', largeForm.json()), 
+            EDICAO_NAO_REALIZADA, 
+            data => data
+        );
+    }
+
     async delete(largeForm) {
         return await this._treatReturn(
             this.connection.delete(`/large-form/${largeForm.email}`), 
@@ -84,7 +93,6 @@ export class VUIFormsAPI {
         if(this.socketConnection === null) throw 'Unable to call realTimeList method without Real Time Mode';
 
         this.socketConnection.on('list', data => {
-            console.log(data);
             listHandler(data);
         });
         

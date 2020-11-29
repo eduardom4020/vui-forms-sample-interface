@@ -6,7 +6,7 @@ import { PhoneTextToComponent } from '../functions/phoneFunctions';
 import { getMessagesFactory } from '../functions/messagingFunctions';
 import { TinySubheader, ActionButton, ActionButtonGroup } from '../styles/components';
 
-export var EmployeeRow = ({largeForm, handleDelete}) => {
+export var EmployeeRow = ({largeForm, handleDelete, handleEdit}) => {
     var [ hovered, hovering ] = useState(false);
     var [ deleting, triggerDeletion ] = useState(false);
     var [ deleted, finishDeletion ] = useState(false);
@@ -36,7 +36,7 @@ export var EmployeeRow = ({largeForm, handleDelete}) => {
                 .finally(() => playAnimation(false));
         }
     }, [deleted, deleting, handleDelete, animating]);
-    console.log({errorComponent})
+
     return (
         <Table.Row 
             onMouseEnter={() => hovering(true)}
@@ -54,7 +54,14 @@ export var EmployeeRow = ({largeForm, handleDelete}) => {
                     {
                         hovered &&
                             <ActionButtonGroup vertical icon size='mini'>
-                                <ActionButton icon='edit' textColor='#1f88be'/>
+                                <ActionButton 
+                                    icon='edit'
+                                    textColor='#1f88be'
+                                    onClick={() => {
+                                        hovering(false);
+                                        handleEdit();
+                                    }}
+                                />
                                 <ActionButton 
                                     icon='trash alternate'
                                     textColor='#dd4b39'

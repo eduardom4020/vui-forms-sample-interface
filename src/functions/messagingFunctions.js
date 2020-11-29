@@ -7,6 +7,7 @@ var messagesFactory = null;
 class MessagesFactory {
     constructor(portalDOM) {
         this.portalDOM = portalDOM;
+        this.messages = {};
     }
 
     _createMessage(type, content, header) {
@@ -18,14 +19,19 @@ class MessagesFactory {
             SystemMessage,
             {
                 [type]: true,
-                size: 'small',
+                size: 'large',
                 header,
                 content,
-                key
+                key,
+                onClose: () => {
+                    delete this.messages[key];
+                }
             }
         );
+
+        this.messages = {...this.messages, [key]: element};
         
-        return ReactDOM.createPortal(element, this.portalDOM, key);
+        return Object.entries(this.messages).map(([Key, Message]) => ReactDOM.createPortal(Message, this.portalDOM, Key));
     }
 
     createErrorMessage(content) {
