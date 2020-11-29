@@ -1,24 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Icon, Table, Header, Grid, Transition } from 'semantic-ui-react';
 import { GITHUB_FAVICON, INSTAGRAM_FAVICON } from '../constants';
 import { CreateGithubLink, CreateInstagramLink, CreateMailToLink, CreateMapsLink } from '../functions/linkFunctions';
 import { PhoneTextToComponent } from '../functions/phoneFunctions';
+import { getMessagesFactory } from '../functions/messagingFunctions';
 import { TinySubheader, ActionButton, ActionButtonGroup } from '../styles/components';
 
-export var EmployeeRow = props => {
+export var EmployeeRow = ({largeForm, handleDelete}) => {
     var [ hovered, hovering ] = useState(false);
+    var [ deleting, triggerDeletion ] = useState(false);
+    var [ deleted, finishDeletion ] = useState(false);
+    var [ animating, playAnimation ] = useState(false);
+    var [ errorComponent, setErrorComponent ] = useState();
 
-    var { largeForm } = props;
+    useEffect(() => {
+        return () => {
+            hovering(false);
+            triggerDeletion(false);
+            finishDeletion(false);
+            playAnimation(false);
+        }
+    }, []);
 
+    useEffect(() => {
+        if(handleDelete && !deleted && deleting && !animating) {
+            playAnimation(true);
+            triggerDeletion(false);
+            handleDelete(largeForm).then(() => finishDeletion(true))
+                .catch(({message}) => {
+                    var messagesFactory = getMessagesFactory();
+                    var error = messagesFactory.createErrorMessage(message);
+                    setErrorComponent(error);
+                    finishDeletion(false);
+                })
+                .finally(() => playAnimation(false));
+        }
+    }, [deleted, deleting, handleDelete, animating]);
+    console.log({errorComponent})
     return (
-        <Table.Row onMouseEnter={() => hovering(true)} onMouseLeave={() => hovering(false)}>
+        <Table.Row 
+            onMouseEnter={() => hovering(true)}
+            onMouseLeave={() => hovering(false)}
+            style={{
+                transition: `transform 250ms ease-in-out`,
+                transform: `translateX(${!animating ? 0 : '-200%'})`,
+                backgroundColor: 'white',
+                border: '1px solid rgba(34,36,38,.1)'
+            }}
+        >
+            {errorComponent}
             <Table.Cell style={{position: 'relative'}}>
                 <Transition.Group animation='slide left' duration={250}>
                     {
                         hovered &&
                             <ActionButtonGroup vertical icon size='mini'>
                                 <ActionButton icon='edit' textColor='#1f88be'/>
-                                <ActionButton icon='trash alternate' textColor='#dd4b39'/>
+                                <ActionButton 
+                                    icon='trash alternate'
+                                    textColor='#dd4b39'
+                                    onClick={() => {
+                                        triggerDeletion(true);
+                                        hovering(false);
+                                    }}
+                                />
                             </ActionButtonGroup>
                     }
                 </Transition.Group>

@@ -20,11 +20,19 @@ export class VUIFormsAPI {
         });
     }
 
-    _treatReturn(promise, onErrorMessage) {
+    _treatReturn(promise, onErrorMessage, customTreatment=null) {
         return promise
             .then(({data, status}) => {
                 if(status === 200) {
-                    var result = data.constructor === Array ? data.map(row => new LargeForm(row)) : new LargeForm(data);
+                    var result = null;
+
+                    if(!customTreatment) {
+                        result = data.constructor === Array ? data.map(row => new LargeForm(row)) : new LargeForm(data);
+                        return Promise.resolve(result);
+                    } else {
+                        result = customTreatment(data);
+                    }
+                    
                     return Promise.resolve(result);
                 } else {
                     var result = {error: `Returned status code ${status}`, message: onErrorMessage};
@@ -41,11 +49,19 @@ export class VUIFormsAPI {
     }
 
     async create(largeForm) {
-        return await this.connection.post('/large-form', largeForm.json(), CRIACAO_NAO_REALIZADA);
+        return await this._treatReturn(
+            this.connection.post('/large-form', largeForm.json()), 
+            CRIACAO_NAO_REALIZADA, 
+            data => data
+        );
     }
 
     async delete(largeForm) {
-        return await this.connection.delete(`/large-form/${largeForm.email}`, NAO_POSSIVEL_DELETAR);
+        return await this._treatReturn(
+            this.connection.delete(`/large-form/${largeForm.email}`), 
+            NAO_POSSIVEL_DELETAR, 
+            data => data
+        );
     }
 
     startRealTimeMode() {
@@ -68,6 +84,7 @@ export class VUIFormsAPI {
         if(this.socketConnection === null) throw 'Unable to call realTimeList method without Real Time Mode';
 
         this.socketConnection.on('list', data => {
+            console.log(data);
             listHandler(data);
         });
         

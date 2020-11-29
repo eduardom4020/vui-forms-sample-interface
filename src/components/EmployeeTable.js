@@ -3,7 +3,7 @@ import { Table } from 'semantic-ui-react';
 import { EmployeeRow } from './EmployeeRow';
 import { SmallHeaderCell } from '../styles/components';
 
-var EmployeeTable = ({rows=[], handleDelete}) => (
+var EmployeeTable = ({rows=[], ...props}) => (
     <Table celled structured striped size='small'>
         <Table.Header>
             <Table.Row>
@@ -18,7 +18,7 @@ var EmployeeTable = ({rows=[], handleDelete}) => (
                 <SmallHeaderCell width='one'>Outros</SmallHeaderCell>
             </Table.Row>
         </Table.Header>
-            {rows.map(largeForm => <EmployeeRow largeForm={largeForm} handleDelete={handleDelete}/>)}
+            {rows.map(largeForm => <EmployeeRow largeForm={largeForm} {...props}/>)}
         <Table.Body>
         </Table.Body>
     </Table>

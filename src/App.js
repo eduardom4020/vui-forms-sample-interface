@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { EmployeeTable, EmployeeListPageTitle, FAB, EmployeeFormDialog } from './components';
 import { MainContainer, TableShadowedContainer } from './styles/components';
 import { VUIFormsAPI } from './integrations/vuiFormsAPI';
-import { API_TIMEOUT } from './constants'; 
+import { API_TIMEOUT } from './constants';
+import { getMessagesFactory } from './functions/messagingFunctions';
 
 var vuiForms = new VUIFormsAPI();
 
@@ -14,6 +15,9 @@ var App = () => {
   var [ creationDialogOpened, openCreationDialog ] = useState(false);
 
   useEffect(() => {
+    var messagesOverlayDOM = document.getElementById('messages-overlay');
+    getMessagesFactory(messagesOverlayDOM);
+
     vuiForms.list()
       .then(setVisibleRows);
   }, []);
@@ -39,7 +43,9 @@ var App = () => {
       <TableShadowedContainer>
         <EmployeeTable 
           rows={visibleRows} 
-          handleDelete={formData => vuiForms.delete(formData)}
+          // handleDelete={formData => vuiForms.delete(formData)}
+          handleDelete={formData => new Promise((res, rej) => setTimeout(() => rej('Errror'), 1000))}
+          deleteTotalTime={API_TIMEOUT}
         />
       </TableShadowedContainer>
       <FAB
